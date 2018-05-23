@@ -38,7 +38,8 @@ class Application {
             add.click()
 
             sleep(5 * 1000)
-            textares.value("今天日志........................")
+            textares.value("""xxxxxxxxx
+""")
 
             submit.click()
 
@@ -49,7 +50,7 @@ class Application {
 
 class LoginPage extends Page {
     static content = {
-        loginButton(to: AdminPage) { $("#btnLogin") }
+        loginButton { $("#btnLogin") }
         username { $("input", name: "userName") }
         password { $("input", name: "userPass") }
     }
