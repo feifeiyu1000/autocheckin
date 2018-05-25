@@ -1,0 +1,8 @@
+{
+  "username": "",
+  "password": "",
+  "driver": "/Users/liurui/Documents/develop/webdriver/geckodriver",
+  "content": "临时写下日志内容，回头我再完善。\n1.\n2.\n3.\n",
+  "cron": "0 14 15 ? * MON-FRI"
+}
+

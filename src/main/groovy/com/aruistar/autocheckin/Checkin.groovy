@@ -2,19 +2,16 @@ package com.aruistar.autocheckin
 
 import geb.Browser
 import geb.Page
+import groovy.util.logging.Slf4j
 import org.openqa.selenium.firefox.FirefoxBinary
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
 
-class Application {
-    static void main(String[] args) {
+@Slf4j
+class Checkin {
+    static def checkin(String username, String password, String text ) {
 
-        //change it
-        def USER_NAME = ""
-        def PASS_WORD = ""
 
-        //change it,and  you can download the driver from here https://github.com/mozilla/geckodriver/releases
-        System.setProperty("webdriver.gecko.driver", "/Users/liurui/Documents/develop/webdriver/geckodriver")
         System.setProperty("geb.build.baseUrl", "http://checkin2.longruan.com")
 
         FirefoxBinary firefoxBinary = new FirefoxBinary();
@@ -26,23 +23,29 @@ class Application {
         def browser = new Browser(driver: new FirefoxDriver(firefoxOptions))
 
         browser.with {
+            log.info("打开登录页面...")
             to LoginPage
-            username.value(USER_NAME)
-            password.value(PASS_WORD)
+            log.info("登录页面打开成功，准备登录...")
+            usernameInput.value(username)
+            passwordInput.value(password)
             loginButton.click()
+            log.info("登录成功")
 
-
+            log.info("跳转至日志页面...")
             to CheckinPage
+            log.info("跳转日志页面成功")
 
             sleep(5 * 1000)
             add.click()
+            log.info("弹出新增日志窗口")
 
             sleep(5 * 1000)
-            textares.value("""xxxxxxxxx
-""")
+            log.info("填写日志内容为：$text")
+            textares.value(text)
+
 
             submit.click()
-
+            log.info("日志填写完成")
 
         }
     }
@@ -51,8 +54,8 @@ class Application {
 class LoginPage extends Page {
     static content = {
         loginButton { $("#btnLogin") }
-        username { $("input", name: "userName") }
-        password { $("input", name: "userPass") }
+        usernameInput { $("input", name: "userName") }
+        passwordInput { $("input", name: "userPass") }
     }
 }
 
