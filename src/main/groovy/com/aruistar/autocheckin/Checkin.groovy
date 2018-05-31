@@ -9,13 +9,12 @@ import org.openqa.selenium.firefox.FirefoxOptions
 
 @Slf4j
 class Checkin {
-    static def checkin(String username, String password, String text ) {
+    static def checkin(String username, String password, String text) {
 
-
-        System.setProperty("geb.build.baseUrl", "http://checkin2.longruan.com")
+//        System.setProperty("geb.build.baseUrl", "https://m.jd.com/")
 
         FirefoxBinary firefoxBinary = new FirefoxBinary();
-        firefoxBinary.addCommandLineOptions("--headless");
+//        firefoxBinary.addCommandLineOptions("--headless");
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         firefoxOptions.setBinary(firefoxBinary);
 
@@ -23,50 +22,45 @@ class Checkin {
         def browser = new Browser(driver: new FirefoxDriver(firefoxOptions))
 
         browser.with {
-            log.info("打开登录页面...")
-            to LoginPage
-            log.info("登录页面打开成功，准备登录...")
-            usernameInput.value(username)
-            passwordInput.value(password)
-            loginButton.click()
-            log.info("登录成功")
 
-            log.info("跳转至日志页面...")
-            to CheckinPage
-            log.info("跳转日志页面成功")
+            go "https://m.jd.com"
 
-            sleep(5 * 1000)
-            add.click()
-            log.info("弹出新增日志窗口")
+            $(".jd-search-icon-login").click()
 
-            sleep(5 * 1000)
-            log.info("填写日志内容为：$text")
-            textares.value(text)
+            $("#username").value(username)
+            $("#password").value(password)
+
+            $("#loginBtn").click()
+
+            sleep(5000)
+
+            go "https://pro.m.jd.com/mall/active/qKRVTAJL7v93L71TkJebPv5GJnE/index.html"
 
 
-            submit.click()
-            log.info("日志填写完成")
+            def target = new Date(2018 - 1900, 4, 31, 14, 0)
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(target);
+            calendar.add(Calendar.SECOND, 10)
+            def after1 = calendar.getTime()
+
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(target);
+            calendar2.add(Calendar.SECOND, -2)
+            def before1 = calendar2.getTime()
+
+            while (new Date() < after1 && new Date() > before1) {
+
+                $("#m_1_14").children().each {
+                    it.click()
+                    sleep(500)
+                }
+
+                sleep(500)
+            }
+
 
         }
     }
 }
 
-class LoginPage extends Page {
-    static content = {
-        loginButton { $("#btnLogin") }
-        usernameInput { $("input", name: "userName") }
-        passwordInput { $("input", name: "userPass") }
-    }
-}
-
-
-class CheckinPage extends Page {
-
-    static url = "/worklog/RZXX/GRRZ/Index"
-
-    static content = {
-        add { $("#link-Add") }
-        textares { $("#WorkLog1") }
-        submit { $("span", text: "确定", class: "l-btn-text icon-ok l-btn-icon-left") }
-    }
-}
